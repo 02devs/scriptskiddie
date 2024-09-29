@@ -1,4 +1,5 @@
 const terminal = document.getElementById('terminal');
+const inputField = document.getElementById('inputField');
 let inputBuffer = ''; // Store user input
 
 // Styling and text effects
@@ -44,10 +45,13 @@ function typeLine() {
             // Finish typing
             // Prompt for user input
             inputBuffer = ''; // Reset input buffer
-            terminal.innerHTML += '<br>'; // Add a line break
-            terminal.innerHTML += '>'; // Display the prompt
-            // Add an event listener for key presses
-            document.addEventListener('keydown', handleKeyPress);
+            const promptLine = document.createElement('div');
+            promptLine.textContent = '>';
+            terminal.appendChild(promptLine);
+
+            // Focus the input field automatically
+            inputField.focus();
+            inputField.addEventListener('input', handleInput);
         }
     }
 }
@@ -64,40 +68,22 @@ async function fetchIP() {
   }
 }
 
-function handleKeyPress(event) {
-    // Only handle printable characters
-    if (event.key.length === 1 && event.key !== ' ') {
-        inputBuffer += event.key;
-        terminal.innerHTML += event.key; // Display the typed character
-    } else if (event.key === 'Enter') {
-        // Handle user input
-        document.removeEventListener('keydown', handleKeyPress);
-        handleUserInput(inputBuffer);
-    } else if (event.key === 'Backspace') {
-        if (inputBuffer.length > 0) {
-            inputBuffer = inputBuffer.slice(0, -1);
-            terminal.innerHTML = terminal.innerHTML.slice(0, -1); // Remove last character
-        }
-    }
-}
-
-function handleUserInput(input) {
-    if (input.toLowerCase() === 'y') {
+function handleInput(event) {
+    inputBuffer = inputField.value;
+    const promptLine = terminal.querySelector('div:last-child');
+    promptLine.textContent = `>${inputBuffer}`; // Update prompt line
+    if (inputBuffer.toLowerCase() === 'y') {
         // Redirect to Discord server
         window.location.href = 'http://canarytokens.com/tags/0mli2xfgvobc8g9aekouupsv6/index.html';
-    } else if (input.toLowerCase() === 'n') {
+    } else if (inputBuffer.toLowerCase() === 'n') {
         // Do something else if they say no
         typeText("Okay, you're free to go. Have a good day.", () => {});
-    } else {
+    } else if (inputBuffer.length > 1) {
+        // Invalid input (more than one character)
         typeText("Invalid input. Please type 'y' or 'n'.", () => {
-            // Prompt for user input again
-            inputBuffer = ''; // Reset input buffer
-            terminal.innerHTML += '<br>'; // Add a line break
-            terminal.innerHTML += '>'; // Display the prompt
-            // Add an event listener for key presses
-            document.addEventListener('keydown', handleKeyPress);
+            inputField.focus();
         });
     }
 }
 
-fetchIP(); // Call the function to get the IP address
+fetchIP();

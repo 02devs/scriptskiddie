@@ -1,0 +1,23 @@
+body {
+  background-color: #000;
+  color: #0f0;
+  font-family: 'Courier New', Courier, monospace;
+  margin: 0;
+  overflow: hidden;
+}
+
+#terminal {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 500px; /* Adjust width as needed */
+  height: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  font-family: monospace;
+  text-align: left; /* Align text to the left */
+  background-color: #000;
+  color: #0f0;
+  border: 1px solid #000;
+}
